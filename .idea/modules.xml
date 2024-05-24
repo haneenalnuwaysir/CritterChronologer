@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/critter/critter.iml" filepath="$PROJECT_DIR$/critter/critter.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/critterChronologer.iml" filepath="$PROJECT_DIR$/.idea/critterChronologer.iml" />
     </modules>
   </component>
