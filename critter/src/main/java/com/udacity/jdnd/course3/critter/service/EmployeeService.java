@@ -19,7 +19,7 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public Employee save(Employee employee) {
+    public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 

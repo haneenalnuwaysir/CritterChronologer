@@ -5,6 +5,7 @@ import com.udacity.jdnd.course3.critter.DTO.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.DTO.EmployeeRequestDTO;
 import com.udacity.jdnd.course3.critter.Entity.Customer;
 import com.udacity.jdnd.course3.critter.Entity.Employee;
+import com.udacity.jdnd.course3.critter.Entity.Pet;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.service.PetService;
@@ -43,9 +44,7 @@ public class UserController {
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDTO, customer);
 
-        Customer savedCustomer = customerService.save(customer);
-
-        BeanUtils.copyProperties(savedCustomer, customerDTO);
+        BeanUtils.copyProperties(customerService.saveCustomer(customer), customerDTO);
 
         return customerDTO;
     }
@@ -57,7 +56,7 @@ public class UserController {
             CustomerDTO customerDTO = new CustomerDTO();
             BeanUtils.copyProperties(customer, customerDTO);
             if(customer.getPets() != null)
-                customerDTO.setPetIds(customer.getPets().stream().map(pet -> { return pet.getId(); }).collect(Collectors.toList()));
+                customerDTO.setPetIds(customer.getPets().stream().map(Pet::getId).collect(Collectors.toList()));
 
             return customerDTO;
         }).collect(Collectors.toList());
@@ -66,11 +65,11 @@ public class UserController {
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
 
-        Customer customer = petService.findById(petId).getOwner();
+        Customer customer = petService.getById(petId).getCustomer();
         CustomerDTO customerDTO = new CustomerDTO();
-        BeanUtils.copyProperties(customer, customerDTO);
+        BeanUtils.copyProperties(petService.getById(petId).getCustomer(), customerDTO);
         if(customer.getPets() != null)
-            customerDTO.setPetIds(customer.getPets().stream().map(pet -> { return pet.getId(); }).collect(Collectors.toList()));
+            customerDTO.setPetIds(customer.getPets().stream().map(Pet::getId).collect(Collectors.toList()));
 
         return customerDTO;
     }
@@ -79,19 +78,15 @@ public class UserController {
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         Employee employee = new Employee();
         BeanUtils.copyProperties(employeeDTO, employee);
-
-        BeanUtils.copyProperties(employeeService.save(employee), employeeDTO);
+        BeanUtils.copyProperties(employeeService.saveEmployee(employee), employeeDTO);
 
         return employeeDTO;
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        Employee employee = employeeService.findById(employeeId);
-
         EmployeeDTO employeeDTO = new EmployeeDTO();
-
-        BeanUtils.copyProperties(employee, employeeDTO);
+        BeanUtils.copyProperties(employeeService.findById(employeeId), employeeDTO);
 
         return employeeDTO;
     }
@@ -100,7 +95,7 @@ public class UserController {
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
         Employee employee = employeeService.findById(employeeId);
         employee.setEmployeeAvailability(daysAvailable);
-        employeeService.save(employee);
+        employeeService.saveEmployee(employee);
     }
 
     @GetMapping("/employee/availability")

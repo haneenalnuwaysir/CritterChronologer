@@ -16,14 +16,16 @@ public class Customer {
     private Long id;
 
     @Nationalized
-    @Column(length = 500)
+    @Column(length = 50)
     private String name;
+    private String lastName;
+
     private String phoneNumber;
 
-    @Column(length = 1000)
+    @Column(length = 500)
     private String notes;
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Pet> pets;
 
 }

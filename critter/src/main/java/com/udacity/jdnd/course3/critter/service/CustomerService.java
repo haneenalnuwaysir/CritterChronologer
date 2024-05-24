@@ -19,12 +19,12 @@ public class CustomerService {
     @Autowired
     private PetRepository petRepository;
 
-    public Customer findById(long customerId) {
+    public Customer getById(long customerId) {
         return customerRepository.findById(customerId).
                 orElseThrow(() -> new UnsupportedOperationException());
     }
 
-    public Customer save(Customer customer) {
+    public Customer saveCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
 

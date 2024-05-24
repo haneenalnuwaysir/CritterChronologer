@@ -15,7 +15,7 @@ public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    public Schedule save(Schedule schedule) {
+    public Schedule saveSchedule(Schedule schedule) {
         return scheduleRepository.save(schedule);
     }
 

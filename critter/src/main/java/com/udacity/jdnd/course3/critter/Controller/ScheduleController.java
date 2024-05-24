@@ -39,7 +39,7 @@ public class ScheduleController {
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
         List<Employee> employees = employeeService.findByIdIn(scheduleDTO.getEmployeeIds());
-        List<Pet> pets = petService.findAllById(scheduleDTO.getPetIds());
+        List<Pet> pets = petService.findAllPetsById(scheduleDTO.getPetIds());
 
         Schedule schedule = new Schedule();
 
@@ -47,20 +47,20 @@ public class ScheduleController {
         schedule.setEmployees(employees);
         schedule.setPets(pets);
 
-        Schedule savedSchedule = scheduleService.save(schedule);
+        Schedule createSchedule = scheduleService.saveSchedule(schedule);
 
         employees.stream().forEach(employee -> {
             if(employee.getSchedules() == null)
                 employee.setSchedules(new ArrayList<>());
 
-            employee.getSchedules().add(savedSchedule);
+            employee.getSchedules().add(createSchedule);
         });
 
         pets.stream().forEach(pet -> {
             if(pet.getSchedules() == null)
                 pet.setSchedules(new ArrayList<>());
 
-            pet.getSchedules().add(savedSchedule);
+            pet.getSchedules().add(createSchedule);
         });
 
 
@@ -69,17 +69,14 @@ public class ScheduleController {
 
     @GetMapping
     public List<ScheduleDTO> getAllSchedules() {
-        List<Schedule> schedules = scheduleService.findAll();
 
-        return convertToDto(schedules);
+        return convertToDto(scheduleService.findAll());
 
     }
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-
-        List<Schedule> schedules = petService.findById(petId).getSchedules();
-        return convertToDto(schedules);
+        return convertToDto(petService.getById(petId).getSchedules());
     }
 
     @GetMapping("/employee/{employeeId}")
@@ -95,7 +92,7 @@ public class ScheduleController {
     @GetMapping("/customer/{customerId}")
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
 
-        List<Pet> pets =customerService.findById(customerId).getPets();
+        List<Pet> pets =customerService.getById(customerId).getPets();
         HashMap<Long, Schedule> map = new HashMap<>();
 
         pets.stream().forEach(pet -> {
@@ -111,8 +108,8 @@ public class ScheduleController {
             ScheduleDTO scheduleDTO = new ScheduleDTO();
             BeanUtils.copyProperties(schedule, scheduleDTO);
 
-            scheduleDTO.setEmployeeIds(schedule.getEmployees().stream().map(employee -> {return employee.getId();}).collect(Collectors.toList()));
-            scheduleDTO.setPetIds(schedule.getPets().stream().map(pet -> {return pet.getId();}).collect(Collectors.toList()));
+            scheduleDTO.setEmployeeIds(schedule.getEmployees().stream().map(Employee::getId).collect(Collectors.toList()));
+            scheduleDTO.setPetIds(schedule.getPets().stream().map(Pet::getId).collect(Collectors.toList()));
 
             return scheduleDTO;
 

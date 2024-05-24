@@ -15,15 +15,15 @@ public class PetService {
     @Autowired
     private PetRepository petRepository;
 
-    public Pet findById(long id) {
+    public Pet getById(long id) {
         return petRepository.findById(id).orElseThrow(() -> new UnsupportedOperationException());
     }
 
-    public Pet save(Pet pet) {
+    public Pet savePet(Pet pet) {
         return petRepository.save(pet);
     }
 
-    public List<Pet> findAllById(List<Long> petIds) {
+    public List<Pet> findAllPetsById(List<Long> petIds) {
         return petRepository.findAllById(petIds);
     }
 

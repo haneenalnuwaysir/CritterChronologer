@@ -17,7 +17,7 @@ public class Pet {
     private Long id;
 
     @Nationalized
-    @Column(length = 500)
+    @Column(length = 50)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -29,7 +29,7 @@ public class Pet {
     private String notes;
 
     @ManyToOne
-    private Customer owner;
+    private Customer customer;
 
     @ManyToMany(mappedBy = "pets")
     private List<Schedule> schedules;

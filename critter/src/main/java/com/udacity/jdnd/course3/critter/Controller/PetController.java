@@ -29,18 +29,18 @@ public class PetController {
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
 
-        Customer owner = customerService.findById(petDTO.getOwnerId());
+        Customer customer = customerService.getById(petDTO.getOwnerId());
 
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet);
-        pet.setOwner(owner);
+        pet.setCustomer(customer);
 
-        Pet savedPet = petService.save(pet);
+        Pet savedPet = petService.savePet(pet);
 
-        if(owner.getPets() == null)
-            owner.setPets(new ArrayList<>());
+        if(customer.getPets() == null)
+            customer.setPets(new ArrayList<>());
 
-        owner.getPets().add(savedPet);
+        customer.getPets().add(savedPet);
 
         BeanUtils.copyProperties(savedPet ,petDTO);
 
@@ -57,9 +57,9 @@ public class PetController {
     public PetDTO getPet(@PathVariable long petId) {
 
         PetDTO petDTO = new PetDTO();
-        Pet pet = petService.findById(petId);
+        Pet pet = petService.getById(petId);
         BeanUtils.copyProperties(pet, petDTO);
-        petDTO.setOwnerId(pet.getOwner().getId());
+        petDTO.setOwnerId(pet.getCustomer().getId());
 
         return petDTO;
     }
@@ -69,7 +69,7 @@ public class PetController {
         return petService.findAll().stream().map(pet -> {
             PetDTO petDTO = new PetDTO();
             BeanUtils.copyProperties(pet, petDTO);
-            petDTO.setOwnerId(pet.getOwner().getId());
+            petDTO.setOwnerId(pet.getCustomer().getId());
             return petDTO;
         }).collect(Collectors.toList());
     }
@@ -77,7 +77,7 @@ public class PetController {
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
 
-        return customerService.findById(ownerId).getPets().stream().map(pet -> {
+        return customerService.getById(ownerId).getPets().stream().map(pet -> {
             PetDTO petDTO = new PetDTO();
             BeanUtils.copyProperties(pet, petDTO);
             petDTO.setOwnerId(ownerId);
