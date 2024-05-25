@@ -26,12 +26,12 @@ public class Employee {
     @JoinTable(name = "employee_skills", joinColumns = @JoinColumn(name = "employee_id"))
     @Column(name = "skill", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<EmployeeSkill> skills;
 
     @ElementCollection
     @JoinTable(name = "employee_days", joinColumns = @JoinColumn(name = "employee_id"))
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<DayOfWeek> employeeAvailability;
 
     @ManyToMany(mappedBy = "employees")

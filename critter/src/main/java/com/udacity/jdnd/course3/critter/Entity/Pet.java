@@ -29,6 +29,7 @@ public class Pet {
     private String notes;
 
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
     @ManyToMany(mappedBy = "pets")

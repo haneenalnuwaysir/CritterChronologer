@@ -47,11 +47,11 @@ public class PetController {
         return petDTO;
     }
 
-    @PostMapping("/{ownerId}")
-    public PetDTO savePet(@RequestBody PetDTO petDTO, @PathVariable("ownerId") Long ownerId) {
-        petDTO.setOwnerId(ownerId);
-        return savePet(petDTO);
-    }
+//    @PostMapping("/{ownerId}")
+//    public PetDTO savePet(@RequestBody PetDTO petDTO, @PathVariable("ownerId") Long ownerId) {
+//        petDTO.setOwnerId(ownerId);
+//        return savePet(petDTO);
+//    }
 
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {

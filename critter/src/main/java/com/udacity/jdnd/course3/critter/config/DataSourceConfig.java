@@ -9,15 +9,15 @@ import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class DataSourceConfig {
 
-    @Bean
-    @Primary
-    @ConfigurationProperties(prefix="com.udacity.datasource")
+//    @Bean
+//    @Primary
+//    @ConfigurationProperties(prefix="com.udacity.datasource")
     public DataSource getDataSource() {
         DataSourceBuilder dsb = DataSourceBuilder.create();
-        dsb.url("jdbc:mysql://localhost:3306/plant");
+        dsb.url("jdbc:mysql://localhost:3306/critter");
         return dsb.build();
     }
 }

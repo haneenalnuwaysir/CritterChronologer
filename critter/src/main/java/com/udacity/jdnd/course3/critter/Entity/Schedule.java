@@ -21,14 +21,14 @@ public class Schedule {
     @JoinTable(name = "schedule_employees",
             joinColumns = @JoinColumn(name = "schedule_id"),
             inverseJoinColumns = @JoinColumn(name = "employee_id"))
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+//    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private List<Employee> employees;
 
     @ManyToMany
     @JoinTable(name = "schedule_pets",
             joinColumns = @JoinColumn(name = "schedule_id"),
             inverseJoinColumns = @JoinColumn(name = "pet_id"))
-    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+//    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private List<Pet> pets;
 
     private LocalDate date;
@@ -37,7 +37,7 @@ public class Schedule {
     @JoinTable(name = "schedule_activity", joinColumns = @JoinColumn(name = "id"))
     @Column(name = "activity", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Cascade(org.hibernate.annotations.CascadeType.ALL)
+//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<EmployeeSkill> activities;
 
 
