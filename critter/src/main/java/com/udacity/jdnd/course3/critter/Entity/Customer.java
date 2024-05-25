@@ -25,7 +25,13 @@ public class Customer {
     @Column(length = 500)
     private String notes;
 
-    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+//    private List<Pet> pets;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL, targetEntity = Pet.class)
     private List<Pet> pets;
+
+    public void addPet(Pet pet) {
+        pets.add(pet);
+    }
 
 }

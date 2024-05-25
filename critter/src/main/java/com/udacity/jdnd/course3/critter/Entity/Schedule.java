@@ -17,25 +17,25 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany
-    @JoinTable(name = "schedule_employees",
-            joinColumns = @JoinColumn(name = "schedule_id"),
-            inverseJoinColumns = @JoinColumn(name = "employee_id"))
+    @ManyToMany(targetEntity = Employee.class)//many employees can belong to one event
+//    @JoinTable(name = "schedule_employees",
+//            joinColumns = @JoinColumn(name = "schedule_id"),
+//            inverseJoinColumns = @JoinColumn(name = "employee_id"))
 //    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private List<Employee> employees;
 
-    @ManyToMany
-    @JoinTable(name = "schedule_pets",
-            joinColumns = @JoinColumn(name = "schedule_id"),
-            inverseJoinColumns = @JoinColumn(name = "pet_id"))
+    @ManyToMany(targetEntity = Pet.class)
+//    @JoinTable(name = "schedule_pets",
+//            joinColumns = @JoinColumn(name = "schedule_id"),
+//            inverseJoinColumns = @JoinColumn(name = "pet_id"))
 //    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
     private List<Pet> pets;
 
     private LocalDate date;
 
     @ElementCollection(targetClass = EmployeeSkill.class)
-    @JoinTable(name = "schedule_activity", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "activity", nullable = false)
+    @JoinTable(name = "schedule_activity")
+    @Column(name = "activities", nullable = false)
     @Enumerated(EnumType.STRING)
 //    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<EmployeeSkill> activities;

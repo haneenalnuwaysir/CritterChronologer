@@ -5,6 +5,7 @@ import com.udacity.jdnd.course3.critter.Entity.Customer;
 import com.udacity.jdnd.course3.critter.Entity.Pet;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.PetService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,23 +29,37 @@ public class PetController {
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
+        Customer owner = null;
 
-        Customer customer = customerService.getById(petDTO.getOwnerId());
+        if (petDTO.getOwnerId() != 0) {
+            owner = this.customerService.findOwnerById(petDTO.getOwnerId());
+        }
 
-        Pet pet = new Pet();
-        BeanUtils.copyProperties(petDTO, pet);
-        pet.setCustomer(customer);
-
+        Pet pet = convertPetDTOToPet(petDTO);
+        pet.setCustomer(owner);
         Pet savedPet = petService.savePet(pet);
 
-        if(customer.getPets() == null)
-            customer.setPets(new ArrayList<>());
-
-        customer.getPets().add(savedPet);
-
-        BeanUtils.copyProperties(savedPet ,petDTO);
-
-        return petDTO;
+        if (owner != null) {
+            owner.addPet(savedPet);
+        }
+        return convertPetToPetDTO(savedPet);
+//
+//        Customer customer = customerService.getById(petDTO.getOwnerId());
+//
+//        Pet pet = new Pet();
+//        BeanUtils.copyProperties(petDTO, pet);
+//        pet.setCustomer(customer);
+//
+//        Pet savedPet = petService.savePet(pet);
+//
+//        if(customer.getPets() == null)
+//            customer.setPets(new ArrayList<>());
+//
+//        customer.getPets().add(savedPet);
+//
+//        BeanUtils.copyProperties(savedPet ,petDTO);
+//
+//        return petDTO;
     }
 
 //    @PostMapping("/{ownerId}")
@@ -84,5 +99,21 @@ public class PetController {
             return petDTO;
         }).collect(Collectors.toList());
 
+    }
+
+    private PetDTO convertPetToPetDTO(Pet pet){
+        PetDTO petDTO = new PetDTO();
+        // in order for copyProperties to work, properties of the DTO and normal object must match in name
+        BeanUtils.copyProperties(pet, petDTO);
+        if (pet.getCustomer() != null) {
+            petDTO.setOwnerId(pet.getCustomer().getId());
+        }
+        return petDTO;
+    }
+
+    private Pet convertPetDTOToPet(PetDTO petDTO){
+        ModelMapper modelMapper = new ModelMapper();
+        Pet pet = modelMapper.map(petDTO, Pet.class);
+        return pet;
     }
 }

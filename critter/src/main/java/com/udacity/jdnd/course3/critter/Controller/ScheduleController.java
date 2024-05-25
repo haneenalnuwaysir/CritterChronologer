@@ -78,8 +78,6 @@ public class ScheduleController {
             dto.add(convertToDTO(s));
         }
         return dto;
-//        return convertToDto(scheduleService.findAll());
-
     }
 
     @GetMapping("/pet/{petId}")
@@ -126,25 +124,25 @@ public class ScheduleController {
 //    }
     private ScheduleDTO convertToDTO(Schedule schedule) {
 
-        ScheduleDTO scheduleDTO = new ScheduleDTO();
-        BeanUtils.copyProperties(schedule, scheduleDTO);
+        ScheduleDTO dto = new ScheduleDTO();
+        BeanUtils.copyProperties(schedule, dto);
 
         // setting the rest (pets, employees) of properties for schedulePTO
-        scheduleDTO.setActivities(schedule.getActivities());
+        dto.setActivities(schedule.getActivities());
 
         List<Pet> pets = schedule.getPets();
         List<Long> petId = new ArrayList<>();
         for (Pet pet : pets) {
             petId.add(pet.getId());
         }
-        scheduleDTO.setPetIds(petId);
+        dto.setPetIds(petId);
         List<Employee> employees = schedule.getEmployees();
         List<Long> employeeId = new ArrayList<>();
         for (Employee employee : employees) {
             employeeId.add(employee.getId());
         }
-        scheduleDTO.setEmployeeIds(employeeId);
-        return scheduleDTO;
+        dto.setEmployeeIds(employeeId);
+        return dto;
 
     }
 
