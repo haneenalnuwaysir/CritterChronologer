@@ -29,28 +29,20 @@ public class PetService {
     CustomerService customerService;
 
     public Pet savePet(Pet pet){
-        Pet savedPet = petRepository.save(pet);
-        Customer customer = savedPet.getOwner();
+        Pet saved = petRepository.save(pet);
 
-        if (customer.getPets() == null)
-            customer.setPets(new ArrayList<>());
+        Customer customer = saved.getOwner();
+        List<Pet> petsOfCustomer = customer.getPets();
 
-        customer.getPets().add(savedPet);
+        if(petsOfCustomer == null){
+            petsOfCustomer = new ArrayList<>();
+        }
+        customer.getPets().add(saved);
+        petsOfCustomer.add(saved);
+        customer.setPets(petsOfCustomer);
         customerRepository.save(customer);
-        return savedPet;
 
-//        Customer customer = saved.getOwner();
-//        List<Pet> petsOfCustomer = customer.getPets();
-//
-//        if(petsOfCustomer == null){
-//            petsOfCustomer = new ArrayList<>();
-//        }
-//        customer.getPets().add(saved);
-////        petsOfCustomer.add(saved);
-////        customer.setPets(petsOfCustomer);
-//        customerRepository.save(customer);
-//
-//        return saved;
+        return saved;
     }
     public Pet getPet(Long petId){
         return petRepository.findById(petId)

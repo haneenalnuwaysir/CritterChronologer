@@ -5,6 +5,7 @@ import com.udacity.jdnd.course3.critter.Entity.Pet;
 import com.udacity.jdnd.course3.critter.Enum.PetType;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.PetService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,14 +60,8 @@ public class PetController {
         petDTO.setNotes(pet.getNotes());
         petDTO.setOwnerId(pet.getOwner().getId());
         petDTO.setBirthDate(pet.getBirthDate());
-
         return petDTO;
-//        BeanUtils.copyProperties(pet,petDTO);
-//        if (pet.getOwner()!=null){
-//            petDTO.setOwnerId(pet.getOwner().getId());
-//        }
-//
-//        petDTO.setType(pet.getPetType());
+
     }
     private Pet convertDTOToEntity(PetDTO petDTO){
         Pet pet = new Pet();

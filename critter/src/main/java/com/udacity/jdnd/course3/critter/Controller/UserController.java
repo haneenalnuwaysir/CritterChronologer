@@ -11,7 +11,6 @@ import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.service.PetService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
@@ -51,19 +50,15 @@ public class UserController {
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-
         return customerService.getAllCustomers()
                 .stream()
-                //convert each customer to customerDTO
                 .map(this::convertCustomerEntityToDTO)
-                //convert all stream to list
                 .collect(Collectors.toList());
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
         Pet pet = petService.getPet(petId);
-
         return convertCustomerEntityToDTO(customerService.getCustomerById(pet.getOwner().getId()));
     }
 
@@ -79,7 +74,6 @@ public class UserController {
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-//        System.out.println(daysAvailable);
         employeeService.setAvailability(daysAvailable,employeeId);
     }
 
@@ -104,7 +98,6 @@ public class UserController {
                     .collect(Collectors.toList());
             customer.setPets(pets);
         }
-//        BeanUtils.copyProperties(customerDTO,customer);
 
         return customer;
     }
@@ -119,26 +112,8 @@ public class UserController {
 
         customerDTO.setPetIds(petIds);
 
-//            List<Long> petIds =petService.getPetsByOwner(customer.getId())
-//                    .stream()
-//                    .map(this::getPetId)
-//                    .collect(Collectors.toList());
-//            customerDTO.setPetIds(petIds);
-//        List<Long> petIds = new ArrayList<>();
-//        try {
-//            customer.getPets().forEach(pet -> {
-//                petIds.add(pet.getId());
-//            });
-//            customerDTO.setPetIds(petIds);
-//        }catch (Exception e){
-//            System.out.println("customer "+customer.getId() + " does not have any pet");
-//        }
-
         return customerDTO;
     }
-//    private Long getPetId(Pet pet){
-//        return pet.getId();
-//    }
 
     private Employee convertDTOToEmployeeEntity(EmployeeDTO employeeDTO){
         Employee employee = new Employee();
