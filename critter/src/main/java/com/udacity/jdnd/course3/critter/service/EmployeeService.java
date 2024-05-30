@@ -1,46 +1,62 @@
 package com.udacity.jdnd.course3.critter.service;
 
+import com.udacity.jdnd.course3.critter.Entity.Schedule;
 import com.udacity.jdnd.course3.critter.Enum.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.Entity.Employee;
+import com.udacity.jdnd.course3.critter.Exception.ResourceNotFoundException;
 import com.udacity.jdnd.course3.critter.Repository.EmployeeRepository;
+import com.udacity.jdnd.course3.critter.Repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 
 @Service
-@Transactional
 public class EmployeeService {
+    @Autowired
+    EmployeeRepository employeeRepository;
 
     @Autowired
-    private EmployeeRepository employeeRepository;
+    ScheduleRepository scheduleRepository;
 
     public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
 
-    public Employee findById(long employeeId) {
-        return employeeRepository.findById(employeeId).orElseThrow(() -> new UnsupportedOperationException());
+    public Employee getEmployeeById(long employeeId) {
+        return employeeRepository.getById(employeeId);
     }
 
-    public List<Employee> findByIdIn(List<Long> employeeIds) {
-        return employeeRepository.findAllById(employeeIds);
+    public void setAvailability(Set<DayOfWeek> daysAvailable, long employeeId) {
+        Optional<Employee> employee = employeeRepository.findById(employeeId);
+        Employee employee1;
+        if (employee.isPresent()) {
+            employee1 = employee.get();
+            employee1.setDaysAvailable(daysAvailable);
+            employeeRepository.save(employee1);
+        }
+
+
     }
 
-    public List<Employee> findAvailableEmployees(Set<EmployeeSkill> skills, DayOfWeek dayOfWeek) {
+    public List<Employee> findEmployeesForService(Set<EmployeeSkill> skills, DayOfWeek dayAvailable) {
+        List<Employee> employees= employeeRepository.findAllBySkillsInAndDaysAvailableContains(skills, dayAvailable);
 
-        List<Employee> employees = employeeRepository.findAllBySkillsInAndEmployeeAvailability(skills, dayOfWeek);
+        List<Employee> employeeList = new ArrayList<>();
 
-        List<Employee> result = new ArrayList<>();
-        employees.stream().forEach(employee -> {
-            if(employee.getSkills().containsAll(skills)){
-                result.add(employee);
-            }
+        employees.forEach(emp -> {
+            if(emp.getSkills().containsAll(skills)){ employeeList.add(emp); }
         });
-        return result;
+        return employeeList;
     }
+
+    public List<Employee> getEmployeesBySchedule(Long scheduleId){
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(ResourceNotFoundException::new);
+        return schedule.getEmployees();
+    }
+
 }

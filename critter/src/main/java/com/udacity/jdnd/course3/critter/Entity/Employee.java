@@ -2,7 +2,6 @@ package com.udacity.jdnd.course3.critter.Entity;
 
 import com.udacity.jdnd.course3.critter.Enum.EmployeeSkill;
 import lombok.Data;
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
@@ -12,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Data
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Employee {
 
     @Id
@@ -19,22 +19,58 @@ public class Employee {
     private Long id;
 
     @Nationalized
-    @Column(length = 500)
+    @Column(length = 50)
     private String name;
 
     @ElementCollection(targetClass = EmployeeSkill.class)
-    @JoinTable(name = "employee_skills", joinColumns = @JoinColumn(name = "employee_id"))
-    @Column(name = "skill", nullable = false)
     @Enumerated(EnumType.STRING)
-//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     private Set<EmployeeSkill> skills;
 
-    @ElementCollection
-    @JoinTable(name = "employee_days", joinColumns = @JoinColumn(name = "employee_id"))
-//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<DayOfWeek> employeeAvailability;
+    @ElementCollection(targetClass = DayOfWeek.class)
+    @Enumerated(EnumType.STRING)
+    private Set<DayOfWeek> daysAvailable;
 
-    @ManyToMany(mappedBy = "employees")
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "employees")
     private List<Schedule> schedules;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<EmployeeSkill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<EmployeeSkill> skills) {
+        this.skills = skills;
+    }
+
+    public Set<DayOfWeek> getDaysAvailable() {
+        return daysAvailable;
+    }
+
+    public void setDaysAvailable(Set<DayOfWeek> daysAvailable) {
+        this.daysAvailable = daysAvailable;
+    }
+
+    public List<Schedule> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<Schedule> schedules) {
+        this.schedules = schedules;
+    }
 
 }

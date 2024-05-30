@@ -11,34 +11,83 @@ import java.util.Set;
 
 @Entity
 @Data
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Schedule {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToMany(targetEntity = Employee.class)//many employees can belong to one event
-//    @JoinTable(name = "schedule_employees",
-//            joinColumns = @JoinColumn(name = "schedule_id"),
-//            inverseJoinColumns = @JoinColumn(name = "employee_id"))
-//    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+    private LocalDate date;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "schedule_employee",
+            joinColumns = {@JoinColumn(name = "schedule_id")},
+            inverseJoinColumns = {@JoinColumn(name = "employee_id")}
+    )
     private List<Employee> employees;
-
-    @ManyToMany(targetEntity = Pet.class)
-//    @JoinTable(name = "schedule_pets",
-//            joinColumns = @JoinColumn(name = "schedule_id"),
-//            inverseJoinColumns = @JoinColumn(name = "pet_id"))
-//    @Cascade(org.hibernate.annotations.CascadeType.MERGE)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "schedule_customer",
+            joinColumns = {@JoinColumn(name = "schedule_id")},
+            inverseJoinColumns = {@JoinColumn(name = "customer_id")}
+    )
+    private List<Customer> customers;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(name = "schedule_pet",
+            joinColumns = {@JoinColumn(name = "schedule_id")},
+            inverseJoinColumns = {@JoinColumn(name = "pet_id")}
+    )
     private List<Pet> pets;
 
-    private LocalDate date;
-
     @ElementCollection(targetClass = EmployeeSkill.class)
-    @JoinTable(name = "schedule_activity")
-    @Column(name = "activities", nullable = false)
     @Enumerated(EnumType.STRING)
-//    @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    private Set<EmployeeSkill> activities;
+    private Set<EmployeeSkill> employeeSkills;
 
+//    public Long getId() {
+//        return id;
+//    }
+//
+//    public void setId(Long id) {
+//        this.id = id;
+//    }
+//
+//    public List<Employee> getEmployees() {
+//        return employees;
+//    }
+//
+//    public void setEmployees(List<Employee> employees) {
+//        this.employees = employees;
+//    }
+//
+//    public List<Customer> getCustomers() {
+//        return customers;
+//    }
+//
+//    public void setCustomers(List<Customer> customers) {
+//        this.customers = customers;
+//    }
+//
+//    public List<Pet> getPets() {
+//        return pets;
+//    }
+//
+//    public void setPets(List<Pet> pets) {
+//        this.pets = pets;
+//    }
+//
+//    public LocalDate getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(LocalDate date) {
+//        this.date = date;
+//    }
+//
+//    public Set<EmployeeSkill> getEmployeeSkills() {
+//        return employeeSkills;
+//    }
+//
+//    public void setEmployeeSkills(Set<EmployeeSkill> employeeSkills) {
+//        this.employeeSkills = employeeSkills;
+//    }
 
 }
