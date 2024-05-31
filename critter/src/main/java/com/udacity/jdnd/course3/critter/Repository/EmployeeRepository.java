@@ -14,11 +14,12 @@ import java.util.Set;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-//    List<Employee> findAllByDaysAvailableContaining(DayOfWeek day);
-
-    List<Employee> findAllBySkillsInAndDaysAvailableContains(Set<EmployeeSkill> skills, DayOfWeek daysAvailable);
-
-    @Query("select e.schedules from Employee e where e.id  = :employeeId")
-    List<Schedule> getSchedulesForEmployee(Long employeeId);
+////    List<Employee> findAllByDaysAvailableContaining(DayOfWeek day);
+//
+//    List<Employee> findAllBySkillsInAndDaysAvailableContains(Set<EmployeeSkill> skills, DayOfWeek daysAvailable);
+//
+//    @Query("select e.schedules from Employee e where e.id  = :employeeId")
+//    List<Schedule> getSchedulesForEmployee(Long employeeId);
+List<Employee> findAllBySkillsInAndDaysAvailable(Set<EmployeeSkill> skills, DayOfWeek dayOfWeek);
 
 }

@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.udacity.jdnd.course3.critter.Controller.*;
 import com.udacity.jdnd.course3.critter.DTO.*;
-import com.udacity.jdnd.course3.critter.Entity.*;
-
 import com.udacity.jdnd.course3.critter.Enum.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.Enum.PetType;
 import org.junit.jupiter.api.Assertions;
@@ -41,6 +39,9 @@ public class CritterFunctionalTest {
 
     @Autowired
     private ScheduleController scheduleController;
+
+    @Autowired
+    private EmployeeRequestDTO employeeRequestDTO;
 
     @Test
     public void testCreateCustomer(){
@@ -86,7 +87,6 @@ public class CritterFunctionalTest {
         Assertions.assertTrue(retrievedCustomer.getPetIds() != null && retrievedCustomer.getPetIds().size() > 0);
         Assertions.assertEquals(retrievedCustomer.getPetIds().get(0), retrievedPet.getId());
     }
-
     @Test
     public void testFindPetsByOwner() {
         CustomerDTO customerDTO = createCustomerDTO();
@@ -96,7 +96,7 @@ public class CritterFunctionalTest {
         petDTO.setOwnerId(newCustomer.getId());
         PetDTO newPet = petController.savePet(petDTO);
         petDTO.setType(PetType.DOG);
-        petDTO.setName("DogName");
+        petDTO.setName("SeeWa");
         PetDTO newPet2 = petController.savePet(petDTO);
 
         List<PetDTO> pets = petController.getPetsByOwner(newCustomer.getId());
@@ -122,13 +122,13 @@ public class CritterFunctionalTest {
     @Test
     public void testChangeEmployeeAvailability() {
         EmployeeDTO employeeDTO = createEmployeeDTO();
-        EmployeeDTO emp1 = userController.saveEmployee(employeeDTO);
-        Assertions.assertNull(emp1.getDaysAvailable());
+        EmployeeDTO emp = userController.saveEmployee(employeeDTO);
+        Assertions.assertNull(emp.getDaysAvailable());
 
-        Set<DayOfWeek> availability = Sets.newHashSet(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
-        userController.setAvailability(availability, emp1.getId());
+        Set<DayOfWeek> availability = Sets.newHashSet(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY);
+        userController.setAvailability(availability, emp.getId());
 
-        EmployeeDTO emp2 = userController.getEmployee(emp1.getId());
+        EmployeeDTO emp2 = userController.getEmployee(emp.getId());
         Assertions.assertEquals(availability, emp2.getDaysAvailable());
     }
 
@@ -172,7 +172,7 @@ public class CritterFunctionalTest {
     @Test
     public void testSchedulePetsForServiceWithEmployee() {
         EmployeeDTO employeeTemp = createEmployeeDTO();
-        employeeTemp.setDaysAvailable(Sets.newHashSet(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY));
+        employeeTemp.setDaysAvailable(Sets.newHashSet(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY));
         EmployeeDTO employeeDTO = userController.saveEmployee(employeeTemp);
         CustomerDTO customerDTO = userController.saveCustomer(createCustomerDTO());
         PetDTO petTemp = createPetDTO();
@@ -231,7 +231,6 @@ public class CritterFunctionalTest {
         compareSchedules(sched3, scheds2p.get(1));
 
         //Owner of the first pet will only be in schedule 1
-
         List<ScheduleDTO> scheds1c = scheduleController.getScheduleForCustomer(userController.getOwnerByPet(sched1.getPetIds().get(0)).getId());
         compareSchedules(sched1, scheds1c.get(0));
 

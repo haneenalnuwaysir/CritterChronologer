@@ -10,9 +10,8 @@ import java.util.List;
 
 @Entity
 @Data
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "pet")
 public class Pet {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,14 +21,16 @@ public class Pet {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private PetType petType;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private Customer owner;
+    private PetType type;
 
     private LocalDate birthDate;
+
+    @Column(length = 500)
     private String notes;
+
+    @ManyToOne
+    @JoinColumn(name="owner_Id")
+    private Customer owner;
 
     @ManyToMany(mappedBy = "pets")
     private List<Schedule> schedules;
